@@ -1,0 +1,19 @@
+
+
+ body {
+  font-family: 'Times New Roman', Times, serif;
+ }
+
+
+button {
+  color: white;
+  background-color:red;
+  padding: 5px 15px;
+  border-radius: 12px;
+}
+
+
+App {
+  font-family: sans-serif;
+  text-align: center;
+}
