@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-export default function AddTodo({ onAddTodo }) {
+// GERAR ID UNICO PARA CADA titulo
+let nextId = 1;
+// ARRAY VAZIO PRAR COMEÇAR SEM titulo
+const initialTodos = [];
+
+
+// componente pai da aplicacao:
+export default function AddTodo({ onAddTodo,todoList }) {
   //guarda o texto digitado no campo “Adicionar tarefa”
   const [title, setTitle] = useState("");
   //guarda o texto digitado no campo “Título da lista”
@@ -8,13 +15,18 @@ export default function AddTodo({ onAddTodo }) {
   //guarda o título final salvo (após pressionar Enter)
   const [savedTitle, setSavedTitle] = useState([]);
 
+
   //É chamada toda vez que o usuário pressiona uma tecla dentro do input do título da lista.
   function handleListTitleKeyDown(e) {
+
     if (e.key === "Enter" && listTitle.trim() !== "") {
       setSavedTitle(listTitle);
       setListTitle("");
     }
   }
+
+
+
 
   return (
     <>
@@ -54,7 +66,13 @@ export default function AddTodo({ onAddTodo }) {
           onClick={() => {
             //verifica se o campo esta vazio
             if (title.trim() === "") return;
-            onAddTodo(title);
+            onAddTodo({
+              //ID = NUMBER, TITLE = STRING,  = BOOLEAN
+              id: todoList.length + 1,
+              conteudoDaLista: title,
+              estaConcluido: false,
+              nomeDaLista : listTitle
+            });
             setTitle("");
           }}
         >

@@ -21,7 +21,7 @@ function Task({ todo, onChange, onDelete }) {
     todoContent = (
       <>
         <input
-          value={todo.title}
+          value={todo.conteudoDaLista}
           onChange={(event) => {
             {
               /*Ao digitar algo, o onChange() é chamado — 
@@ -29,7 +29,7 @@ function Task({ todo, onChange, onDelete }) {
             }
             onChange({
               ...todo,
-              title: event.target.value,
+              conteudoDaLista: event.target.value,
             });
           }}
         />{" "}
@@ -40,7 +40,7 @@ function Task({ todo, onChange, onDelete }) {
   } else {
     todoContent = (
       <>
-        {todo.title} {/*BOTAO PARA EDITAR */}
+        {todo.conteudoDaLista} {/*BOTAO PARA EDITAR */}
         <button onClick={() => setIsEditing(true)}>Editar Tarefa</button>{" "}
       </>
     );
@@ -50,11 +50,11 @@ function Task({ todo, onChange, onDelete }) {
       <input
         //O checkbox permite marcar a tarefa como concluída
         type="checkbox"
-        checked={todo.done}
+        checked={todo.estaConcluido}
         onChange={(e) => {
           onChange({
             ...todo,
-            done: e.target.checked,
+            estaConcluido: e.target.checked,
           });
         }}
       />
