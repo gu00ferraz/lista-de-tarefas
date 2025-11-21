@@ -1,39 +1,32 @@
 import { useState } from "react";
 
-// GERAR ID UNICO PARA CADA titulo
-let nextId = 1;
-// ARRAY VAZIO PRAR COMEÇAR SEM titulo
-const initialTodos = [];
+export default function AddTodo({ onAddTodo }) {
+  const [title, setTitle] = useState("");         // tarefa digitada
+  const [listTitle, setListTitle] = useState(""); // título sendo digitado
+  const [savedTitle, setSavedTitle] = useState(""); // título final da lista atual
 
-
-// componente pai da aplicacao:
-export default function AddTodo({ onAddTodo,todoList }) {
-  //guarda o texto digitado no campo “Adicionar tarefa”
-  const [title, setTitle] = useState("");
-  //guarda o texto digitado no campo “Título da lista”
-  const [listTitle, setListTitle] = useState("");
-  //guarda o título final salvo (após pressionar Enter)
-  const [savedTitle, setSavedTitle] = useState([]);
-
-
-  //É chamada toda vez que o usuário pressiona uma tecla dentro do input do título da lista.
+  // Salva o nome da lista apenas quando apertar ENTER
   function handleListTitleKeyDown(e) {
-
     if (e.key === "Enter" && listTitle.trim() !== "") {
-      setSavedTitle(listTitle);
-      setListTitle("");
+      setSavedTitle(listTitle.trim()); // título definitivo
+      setListTitle(""); // limpa o campo
     }
   }
 
+  function handleAdd() {
+    if (title.trim() === "") return;
 
+    // envia tarefa usando o título DEFINITIVO da lista
+    onAddTodo(title.trim(), savedTitle || "(Sem título)");
 
+    setTitle(""); // limpa o campo da tarefa
+  }
 
   return (
     <>
-      {/*TITULO FIXO DA <PAGINA></PAGINA> */}
-      <h1> Aqui estão suas tarefas diárias </h1>
+      <h1>Aqui estão suas tarefas diárias</h1>
 
-      {/* adiciona LA EMBAIXO o  título da lista */}
+      {/* Campo de Título da Lista */}
       <div style={{ marginBottom: "20px" }}>
         <input
           placeholder="Digite um título para a lista e pressione Enter"
@@ -49,7 +42,7 @@ export default function AddTodo({ onAddTodo,todoList }) {
         />
       </div>
 
-      {/* SEÇÃO 2: adicionar tarefas */}
+      {/* Campo para adicionar tarefas */}
       <div>
         <input
           placeholder="Adicionar tarefa"
@@ -62,23 +55,14 @@ export default function AddTodo({ onAddTodo,todoList }) {
           }}
         />
 
-        <button
-          onClick={() => {
-            //verifica se o campo esta vazio
-            if (title.trim() === "") return;
-            onAddTodo({
-              //ID = NUMBER, TITLE = STRING,  = BOOLEAN
-              id: todoList.length + 1,
-              conteudoDaLista: title,
-              estaConcluido: false,
-              nomeDaLista : listTitle
-            });
-            setTitle("");
-          }}
-        >
-          Adicionar Tarefa
-        </button>
-        {savedTitle && <h2 style={{ marginTop: "15px" }}>{savedTitle}</h2>}
+        <button onClick={handleAdd}>Adicionar Tarefa</button>
+
+        {/* Exibe título da lista SOMENTE depois que for salvo */}
+        {savedTitle && (
+          <h2 style={{ marginTop: "15px" }}>
+          
+          </h2>
+        )}
       </div>
     </>
   );

@@ -1,54 +1,61 @@
 import { useState } from "react";
 
-export default function TaskList({ todos, onChangeTodo, onDeleteTodo }) {
-  //Dentro do return, ele usa o método .map() para percorrer cada tarefa (todo)
-  //e renderizar um componente <Task> para cada uma delas.
+export default function TaskList({ listMap, onChangeTodo, onDeleteTodo }) {
   return (
-    <ul>
-      {todos.map((todo) => (
-        <li key={todo.id}>
-          <Task todo={todo} onChange={onChangeTodo} onDelete={onDeleteTodo} />
-        </li>
+    <div>
+      {Array.from(listMap.entries()).map(([nomeDaLista, itens]) => (
+        <div key={nomeDaLista} style={{ marginBottom: "20px" }}>
+          <h2>{nomeDaLista}</h2>
+
+          <ul>
+            {itens.map((todo) => (
+              <li key={todo.id}>
+                <Task
+                  todo={todo}
+                  onChange={onChangeTodo}
+                  onDelete={onDeleteTodo}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-      {/*COLOCAR AQUI A FUNCIONALIDADE */}
-    </ul>
+    </div>
   );
 }
+
 function Task({ todo, onChange, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
+
   let todoContent;
+
   if (isEditing) {
     todoContent = (
       <>
         <input
           value={todo.conteudoDaLista}
           onChange={(event) => {
-            {
-              /*Ao digitar algo, o onChange() é chamado — 
-          ele envia a tarefa atualizada para o componente pai. */
-            }
             onChange({
               ...todo,
               conteudoDaLista: event.target.value,
             });
           }}
-        />{" "}
-        {/*BOTAO PARA SALVAR */}
-        <button onClick={() => setIsEditing(false)}>Salvar Edição</button>{" "}
+        />
+        <button onClick={() => setIsEditing(false)}>Salvar Edição</button>
       </>
     );
   } else {
     todoContent = (
       <>
-        {todo.conteudoDaLista} {/*BOTAO PARA EDITAR */}
-        <button onClick={() => setIsEditing(true)}>Editar Tarefa</button>{" "}
+        {todo.conteudoDaLista}
+        <button onClick={() => setIsEditing(true)}>Editar Tarefa</button>
       </>
     );
   }
+
   return (
     <label>
       <input
-        //O checkbox permite marcar a tarefa como concluída
         type="checkbox"
         checked={todo.estaConcluido}
         onChange={(e) => {
@@ -59,7 +66,6 @@ function Task({ todo, onChange, onDelete }) {
         }}
       />
       {todoContent}
-      {/*BOTAO PARA DELETAR */}
       <button onClick={() => onDelete(todo.id)}>Deletar Tarefa</button>
     </label>
   );

@@ -1,84 +1,68 @@
 import "./styles.css";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import TaskList from "./TaskList.js";
 import AddTodo from "./AddTodo";
 
-// GERAR ID UNICO PARA CADA TAREFA
-let nextId = 1;
-// ARRAY VAZIO PRAR COMEÇAR SEM TAREFAS
+// ARRAY VAZIO PARA COMEÇAR SEM TAREFAS
 const initialTodos = [];
-//TASKAPP COMPONENTE filho - conteudo 
 
 export default function TaskApp() {
   const [todos, setTodos] = useState(initialTodos);
-  const [listMap,setListMap] = useState(new Map())
+  const [listMap, setListMap] = useState(new Map());
 
+  // Agrupa tarefas por nomeDaLista
   useEffect(() => {
+    const mapa = new Map();
 
-    /*
-useEffect(() => {
-  const mapa = new Map();
+    todos.forEach((todo) => {
+      const chave = todo.nomeDaLista;
 
-  todos.forEach((todo) => {
-    if (!mapa.has(todo.nomeDaLista)) {
-      mapa.set(todo.nomeDaLista, []);
-    }
-    mapa.get(todo.nomeDaLista).push(todo);
-  });
+      if (!mapa.has(chave)) {
+        mapa.set(chave, []);
+      }
 
-  setListMap(mapa);
-}, [todos]);
+      mapa.get(chave).push(todo);
+    });
 
-return (
-  <div>
-    {Array.from(listMap.entries()).map(([nomeDaLista, itens]) => (
-      <div key={nomeDaLista}>
-        <h2>{nomeDaLista}</h2>
-        {itens.map((item) => (
-          <p key={item.id}>{item.conteudoDaLista}</p>
-        ))}
-      </div>
-    ))}
-  </div>
-);
+    setListMap(mapa);
+  }, [todos]);
 
-    */
-  })
-
-  console.log(todos)
-  console.log(listMap)
-
-  // CRIA O OBJETO (CREATE)
-  function handleAddTodo(todo) {
+  // CREATE
+  function handleAddTodo(conteudoDaLista, nomeDaLista) {
     setTodos([
       ...todos,
-      todo
+      {
+        id: Date.now(),
+        conteudoDaLista,
+        nomeDaLista,
+        estaConcluido: false
+      }
     ]);
   }
-  // ATUALIZA O OBJETO (UPDATE)
+
+  // UPDATE
   function handleChangeTodo(nextTodo) {
     setTodos(
-      todos.map((t) => {
-        if (t.id === nextTodo.id) {
-          return nextTodo;
-        } else {
-          return t;
-        }
-      })
+      todos.map((t) => (t.id === nextTodo.id ? nextTodo : t))
     );
   }
-  // DELETA O OBJETO (DELETE)
+
+  // DELETE
   function handleDeleteTodo(todoId) {
     setTodos(todos.filter((t) => t.id !== todoId));
   }
 
+console.log(todos);
+ console.log(listMap);
   return (
     <>
-      {/*QUANDO O USARIO ADICIONA CHAMA A FUNCAO ADD, DEPOIS A CHANGE E DELETE*/}
-      <AddTodo onAddTodo={handleAddTodo} todoList={todos} />
+      {/* Formulário */}
+      <AddTodo onAddTodo={handleAddTodo} />
+
+      {/* Lista agrupada */}
       <TaskList
-      todos={todos}
+        listMap={listMap}
         onChangeTodo={handleChangeTodo}
         onDeleteTodo={handleDeleteTodo}
       />
