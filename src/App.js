@@ -84,6 +84,7 @@ export default function TaskApp() {
       const created = await createTarefa(lista.id, {
         conteudoDasTarefas: conteudoDaLista,
         estaConcluido: false,
+        nomeDaLista: nomeDaLista, 
       });
 
       const novoTodo = {
